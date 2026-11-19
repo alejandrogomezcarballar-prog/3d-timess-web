@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0f172a">
+    <title>3D Timess Marketing | DyA ❤️ &amp; Tezo-Express</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.3.1/dist/model-viewer.min.js"></script>
+
+    <style>
+        video, img { image-rendering: -webkit-optimize-contrast; transform: translateZ(0); }
+        @keyframes flotar { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+        .agente-flota { animation: flotar 3s ease-in-out infinite; }
+        .tarjeta-3d { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .tarjeta-3d:hover { transform: translateY(-4px); box-shadow: 0 20px 30px -12px rgba(37, 99, 235, 0.28); }
+        .holograma-sello {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+            background-size: 200% 200%;
+            animation: brilloHolograma 4s ease infinite;
+        }
+        @keyframes brilloHolograma { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        model-viewer { width: 100%; height: 270px; background: radial-gradient(circle, #1e293b 0%, #090d16 100%); border-radius: 0.75rem; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 font-sans pb-28">
+
+    <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center gap-3">
+                <button onclick="abrirSelectorLogo()" title="Cambiar Mi Logo" class="relative group w-11 h-11 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-slate-900 text-white flex flex-col items-center justify-center shrink-0">
+                    <img id="brand-logo-img" src="./logo.png" alt="Logo DyA y 3D Timess" class="w-full h-full object-cover hidden">
+                    <span id="brand-logo-fallback" class="text-[11px] font-black leading-none text-center">DyA<br><span class="text-rose-400">❤️</span></span>
+                    <span class="absolute inset-0 bg-black/65 text-white text-[9px] font-bold opacity-0 group-hover:opacity-100 flex items-center justify-center">Logo</span>
+                </button>
+                <input type="file" id="input-mi-logo" accept="image/*" class="hidden" onchange="cargarLogoPropio(event)">
+
+                <div>
+                    <span class="text-[10px] font-bold tracking-wider uppercase text-blue-600 dark:text-blue-400">3D Timess Marketing &bull; DyA ❤️</span>
+                    <h1 class="text-base sm:text-lg font-extrabold leading-tight">Alejandro Gómez Carballar &bull; Tezoyuca</h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="abrirModalPublicar()" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white">
+                    + Locatario / Video
+                </button>
+                <button onclick="document.documentElement.classList.toggle('dark')" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
+                    Tema
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="max-w-6xl mx-auto px-4 pt-8 pb-4 text-center">
+        <span class="inline-block px-3 py-1 mb-2 text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-100 dark:bg-blue-900/40 dark:text-blue-300 rounded-full">
+            Tezoyuca, Estado de México &bull; Plataforma 3D Unificada
+        </span>
+        <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-2">
+            3D Timess Marketing, Tezo-Express y Soluciones Industriales
+        </h2>
+        <p class="max-w-2xl mx-auto text-slate-600 dark:text-slate-300 text-xs md:text-sm">
+            Visor 3D/AR, mapa interactivo de Tezoyuca, sistema punto de venta Tezo-Express, costales, megasacos, consultoría de almacén, taller de costura y agente de información integrado.
+        </p>
+    </section>
+
+    <section id="proyectos" class="max-w-6xl mx-auto px-4 py-3">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-bold">Exhibidor 3D / AR, Tezo-Express y Unidades de Negocio</h3>
+            <span id="xr-status" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-200 dark:bg-slate-800">
+                Verificando 3D / AR...
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="tarjeta-3d bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase">Modelo 3D &amp; Realidad Aumentada</span>
+                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold text-white holograma-sello">3D / AR</span>
+                </div>
+
+                <model-viewer id="visor-3d-principal"
+                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf"
+                    ar
+                    ar-modes="webxr scene-viewer quick-look"
+                    camera-controls
+                    touch-action="pan-y"
+                    auto-rotate
+                    shadow-intensity="1"
+                    alt="Modelo 3D interactivo">
+                    <button slot="ar-button" class="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-bold shadow-lg">
+                        Ver en Espacio (AR)
+                    </button>
+                </model-viewer>
+
+                <div class="mt-3 flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                    <span class="text-xs text-slate-600 dark:text-slate-400">Prototipos, empaques y exhibición 3D</span>
+                    <button onclick="abrirModalPago('Muestra / Cotización 3D', 50)" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg">
+                        Pagar $50 MXN
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 justify-between">
+                <div class="tarjeta-3d bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex-1 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Punto de Venta y Comercios</span>
+                        <h4 class="text-lg font-bold mt-1 mb-1">Tezo-Express POS</h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs">
+                            Aplicación web punto de venta para tiendas, abarrotes y negocios locales. Despliegue base desde $50.00 MXN.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
+                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">$50.00 MXN</span>
+                        <div class="flex gap-2">
+                            <a href="https://tezo-express-d6c.pages.dev" target="_blank" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 text-xs font-semibold rounded-lg">Abrir Tezo-Express</a>
+                            <button onclick="abrirModalPago('Despliegue Tezo-Express POS', 50)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg">Pagar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tarjeta-3d bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex-1 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase">Suministro, Almacén y Confección</span>
+                        <h4 class="text-lg font-bold mt-1 mb-1">Costales, Megasacos, Almacén y Costura</h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs">
+                            Costales desde $1.30 c/u, megasacos, consultoría de almacén y taller de costura (bolsas ecológicas de pellón y manta).
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
+                        <span class="text-xs font-bold text-amber-600 dark:text-amber-400">WhatsApp: 844 146 4515</span>
+                        <div class="flex gap-2">
+                            <a href="https://wa.me/5218441464515?text=Hola%20Alejandro,%20solicito%20informaci%C3%B3n%20sobre%20costales,%20megasacos,%20consultor%C3%ADa%20de%20almac%C3%A9n%20o%20taller%20de%20costura." target="_blank" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg">WhatsApp</a>
+                            <button onclick="abrirModalPago('Anticipo Suministro / Asesoría', 500)" class="px-3 py-1.5 bg-amber-500 text-white text-xs font-bold rounded-lg">Anticipo $500</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="mapa-tezoyuca" class="max-w-6xl mx-auto px-4 py-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Mapa 3D Hiperlocal</span>
+                    <h3 class="text-xl font-bold">Tezoyuca, Estado de México</h3>
+                    <p id="distancia-info" class="text-xs text-slate-500 dark:text-slate-400">
+                        Coordenadas base: 19.5918565, -98.913064 &bull; Verde = Abierto ahora, Gris = Cerrado.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="obtenerUbicacionUsuario()" class="px-3 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white">
+                        Mi Ubicación
+                    </button>
+                    <button onclick="configurarGoogleSheets()" class="px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700">
+                        Conectar Sheets CSV
+                    </button>
+                </div>
+            </div>
+            <div id="map" class="w-full h-72 sm:h-96 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700"></div>
+        </div>
+    </section>
+
+    <section id="catalogo" class="max-w-6xl mx-auto px-4 py-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">Directorio y Multimedia HD/4K</span>
+                <h3 class="text-2xl font-bold">Locatarios y Spots</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="filtrarCategoria('todos')" id="btn-cat-todos" class="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white">Todos</button>
+                <button onclick="filtrarCategoria('industrial')" id="btn-cat-industrial" class="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-800">Industrial</button>
+                <button onclick="filtrarCategoria('alimentos')" id="btn-cat-alimentos" class="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-800">Alimentos</button>
+                <button onclick="filtrarCategoria('servicios')" id="btn-cat-servicios" class="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-800">Servicios</button>
+            </div>
+        </div>
+        <div id="grid-contenido" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- Modal Publicar Locatario -->
+    <div id="modal-publicar" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold">Registrar Locatario / Video</h3>
+                <button onclick="cerrarModalPublicar()" class="text-xl font-bold text-slate-400">&times;</button>
+            </div>
+            <form id="form-publicar" onsubmit="guardarPublicacion(event)" class="space-y-3">
+                <input type="text" id="input-titulo" required placeholder="Nombre del negocio o producto" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg p-2.5 text-sm">
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="input-categoria" class="border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg p-2.5 text-xs">
+                        <option value="alimentos">Alimentos y Botanas</option>
+                        <option value="industrial">Costales / Megasacos / Costura</option>
+                        <option value="servicios">Almacén / Tezo-Express / Servicios</option>
+                    </select>
+                    <input type="tel" id="input-wa" value="8441464515" placeholder="WhatsApp 10 dígitos" class="border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg p-2.5 text-xs">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="input-horario" value="08:00-20:00" placeholder="Horario (08:00-20:00)" class="border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg p-2 text-xs">
+                    <button type="button" onclick="usarMiCoordenadaEnFormulario()" class="px-2 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
+                        Capturar GPS
+                    </button>
+                </div>
+                <input type="hidden" id="input-lat" value="19.5918565">
+                <input type="hidden" id="input-lon" value="-98.913064">
+                <textarea id="input-desc" rows="2" required placeholder="Detalles del locatario o servicio..." class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg p-2.5 text-sm"></textarea>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase mb-1">Logo</label>
+                        <input type="file" id="input-logo" accept="image/*" class="w-full text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase mb-1">Video HD/4K o Imagen *</label>
+                        <input type="file" id="input-media" accept="video/*,image/*" required class="w-full text-xs">
+                    </div>
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="cerrarModalPublicar()" class="px-4 py-2 text-xs rounded-lg border border-slate-300">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold rounded-lg bg-blue-600 text-white">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Pagos -->
+    <div id="modal-pago" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 id="pago-concepto" class="text-lg font-bold">Pagar Servicio</h3>
+                    <p class="text-xs text-emerald-600 font-bold">Monto: <span id="pago-monto">$50.00</span> MXN</p>
+                </div>
+                <button onclick="cerrarModalPago()" class="text-xl font-bold text-slate-400">&times;</button>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/30">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs font-bold text-emerald-800 dark:text-emerald-300">CoDi / DiMo / SPEI</span>
+                    <span class="text-[10px] font-bold px-2 py-0.5 bg-emerald-600 text-white rounded-full">0% Comisión</span>
+                </div>
+                <p class="text-[11px] text-slate-600 dark:text-slate-400 mb-2">Confirma tu pago directo al WhatsApp 844 146 4515.</p>
+                <button onclick="copiarDatosSPEI()" class="w-full py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold">
+                    Copiar Referencia y Confirmar por WhatsApp
+                </button>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-purple-300 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/30 space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-purple-800 dark:text-purple-300">Polygon PoS &bull; USDC Nativo</span>
+                    <span class="text-[10px] font-bold text-purple-600">EIP-681</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="pagarConPolygonUSDC()" class="flex-1 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold">
+                        Pagar con Billetera
+                    </button>
+                    <button onclick="copiarURI_EIP681()" class="px-3 py-2 rounded-lg border border-purple-400 text-purple-700 dark:text-purple-300 text-xs font-bold">
+                        Copiar URI
+                    </button>
+                </div>
+                <p id="web3-tx-status" class="text-[11px] text-slate-500 break-all"></p>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                <span class="text-xs font-bold block">Tarjeta / OXXO / Pasarelas</span>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="https://buy.stripe.com/" target="_blank" class="text-center py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold">Stripe</a>
+                    <a href="https://www.mercadopago.com.mx/" target="_blank" class="text-center py-2 rounded-lg bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold">Mercado Pago</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visor Fullscreen HD/4K -->
+    <div id="visor-fullscreen" class="fixed inset-0 z-50 hidden bg-black flex flex-col justify-between">
+        <div class="flex justify-between items-center p-4 bg-gradient-to-b from-black/80 to-transparent text-white z-10">
+            <div class="flex items-center gap-3">
+                <img id="visor-logo" src="" class="w-8 h-8 rounded-full object-cover hidden">
+                <div>
+                    <h4 id="visor-titulo" class="font-bold text-sm"></h4>
+                    <span class="text-[11px] text-emerald-400 font-semibold">Resolución Original HD / 4K</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <a id="visor-descargar" download="" class="px-3 py-1.5 bg-white/20 rounded-lg text-xs font-semibold">Bajar</a>
+                <button onclick="cerrarVisor()" class="px-3 py-1.5 bg-red-600 rounded-lg text-xs font-bold">Cerrar</button>
+            </div>
+        </div>
+        <div id="visor-contenedor" class="flex-1 flex items-center justify-center w-full h-full overflow-hidden p-2"></div>
+    </div>
+
+    <!-- Agente Oficial Integrado -->
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+        <div id="panel-agente" class="hidden mb-3 w-80 sm:w-96 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 p-3.5 text-white flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold text-sm">Agente Oficial &bull; 3D Timess &amp; DyA ❤️</h4>
+                    <p class="text-[10px] text-blue-200">Información: Web 3D, Mi Logo y Tezo-Express</p>
+                </div>
+                <div class="flex items-center gap-1">
+                    <button onclick="hablarAgente()" class="px-2 py-1 bg-white/15 hover:bg-white/25 rounded text-xs">Voz</button>
+                    <button onclick="document.getElementById('panel-agente').classList.add('hidden')" class="px-2 py-1 hover:bg-white/20 rounded text-sm font-bold">&times;</button>
+                </div>
+            </div>
+
+            <div id="agente-mensajes" class="p-3.5 h-60 overflow-y-auto space-y-2.5 text-xs bg-slate-50 dark:bg-slate-950/60">
+                <div class="bg-white dark:bg-slate-800 p-3 rounded-xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
+                    <p class="font-bold text-blue-600 dark:text-blue-400 mb-1">Agente de 3D Timess Marketing</p>
+                    <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+                        Listo para informarte sobre la <strong>página web 3D</strong>, tu logo <strong>DyA ❤️ / 3D Timess</strong>, <strong>Tezo-Express</strong>, costales/megasacos, consultoría de almacén y taller de costura.
+                    </p>
+                </div>
+            </div>
+
+            <div class="px-3 pt-2 pb-1.5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-wrap gap-1.5">
+                <button onclick="consultarAgente('web3d')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold">Web 3D</button>
+                <button onclick="consultarAgente('logo')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold">Mi Logo DyA ❤️</button>
+                <button onclick="consultarAgente('tezoexpress')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold">Tezo-Express</button>
+                <button onclick="consultarAgente('servicios')" class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">Costales / Almacén / Costura</button>
+            </div>
+
+            <form onsubmit="enviarPreguntaAgente(event)" class="p-2.5 bg-white dark:bg-slate-900 flex gap-1.5">
+                <input type="text" id="input-agente-pregunta" placeholder="Escribe tu consulta..." class="flex-1 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg px-2.5 py-1.5 text-xs">
+                <button type="submit" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold">Enviar</button>
+            </form>
+        </div>
+
+        <button onclick="document.getElementById('panel-agente').classList.toggle('hidden')" class="agente-flota flex items-center gap-2 bg-slate-900 hover:bg-blue-700 text-white px-4 py-2.5 rounded-full shadow-xl border border-blue-400/40 transition">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs font-extrabold">Agente 3D &bull; DyA &bull; Tezo-Express</span>
+        </button>
+    </div>
+
+    <script type="module">
+        import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs';
+        import { ethers } from 'https://cdn.jsdelivr.net/npm/ethers@6/+esm';
+
+        const CONFIG = {
+            TEZOYUCA_LNG: -98.913064,
+            TEZOYUCA_LAT: 19.5918565,
+            WA_ADMIN: '5218441464515',
+            MERCHANT_EVM_WALLET: '0x0000000000000000000000000000000000000000',
+            POLYGON_NATIVE_USDC: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+            POLYGON_CHAIN_ID: '0x89',
+            MXN_POR_USD: 20.0,
+            CLABE_DIMO_LOCAL: '8441464515',
+            TEZO_EXPRESS_URL: 'https://tezo-express-d6c.pages.dev',
+            LOGO_DEFAULT: './logo.png'
+        };
+
+        // 1. MI LOGO EN CABECERA
+        function inicializarMiLogo() {
+            const img = document.getElementById('brand-logo-img');
+            const fallback = document.getElementById('brand-logo-fallback');
+            const guardado = localStorage.getItem('timess_mi_logo');
+            img.onload = () => { img.classList.remove('hidden'); fallback.classList.add('hidden'); };
+            img.onerror = () => { img.classList.add('hidden'); fallback.classList.remove('hidden'); };
+            img.src = guardado || CONFIG.LOGO_DEFAULT;
+        }
+        window.abrirSelectorLogo = () => document.getElementById('input-mi-logo').click();
+        window.cargarLogoPropio = (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try { localStorage.setItem('timess_mi_logo', ev.target.result); } catch {}
+                inicializarMiLogo();
+                agregarBurbujaAgente('Logotipo actualizado en la cabecera. Para mostrarlo globalmente en producción, sube <code>logo.png</code> a la raíz del repositorio.', false);
+            };
+            reader.readAsDataURL(file);
+        };
+        inicializarMiLogo();
+
+        // 2. AGENTE INTEGRADO (WEB 3D, MI LOGO DyA ❤️, TEZO-EXPRESS Y SERVICIOS)
+        let ultimaRespuestaAgente = 'Agente de 3D Timess Marketing y Tezo-Express en Tezoyuca listo.';
+
+        function generarRespuestaAgente(texto) {
+            const q = texto.toLowerCase();
+            if (q === 'web3d' || q.includes('3d') || q.includes('ar') || q.includes('mapa') || q.includes('video')) {
+                return `La <strong>Página Web 3D</strong> incluye visor 3D/AR (<code>@google/model-viewer</code>), mapa 3D de Tezoyuca (<code>19.5918565, -98.913064</code>) con edificios extruidos y estado <em>Abierto/Cerrado</em>, además de reproducción HD/4K en pantalla completa.`;
+            }
+            if (q === 'logo' || q.includes('logo') || q.includes('dya') || q.includes('dalia') || q.includes('marca')) {
+                return `Tu identidad une <strong>3D Timess Marketing</strong> y el emblema <strong>DyA ❤️</strong> (Alejandro y Dalia). Toca el cuadro superior izquierdo para cambiar el logotipo al instante o sube <code>logo.png</code> a tu repositorio.`;
+            }
+            if (q === 'tezoexpress' || q.includes('tezo') || q.includes('pos') || q.includes('50')) {
+                return `<strong>Tezo-Express</strong> es tu sistema punto de venta para comercios en Tezoyuca y México, con despliegue base desde <strong>$50.00 MXN</strong>. Demo en <a href="${CONFIG.TEZO_EXPRESS_URL}" target="_blank" class="underline font-bold text-blue-600">tezo-express-d6c.pages.dev</a>.`;
+            }
+            if (q === 'servicios' || q.includes('costal') || q.includes('megasaco') || q.includes('almacen') || q.includes('costura') || q.includes('botana')) {
+                return `Servicios activos de <strong>Alejandro Gómez Carballar</strong> en Tezoyuca: <strong>costales desde $1.30 c/u</strong>, <strong>megasacos</strong>, <strong>consultoría de almacén</strong>, <strong>taller de costura</strong> (bolsas ecológicas de pellón y manta), <strong>botanas</strong> y <strong>Tezo-Express</strong>. WhatsApp directo: <a href="https://wa.me/${CONFIG.WA_ADMIN}" target="_blank" class="underline font-bold text-emerald-600">844 146 4515</a>.`;
+            }
+            return `Consulta sobre <strong>Web 3D</strong>, <strong>Logo DyA ❤️</strong>, <strong>Tezo-Express</strong> o <strong>costales / almacén / costura</strong>, o escríbenos por WhatsApp al <a href="https://wa.me/${CONFIG.WA_ADMIN}" target="_blank" class="underline font-bold text-emerald-600">844 146 4515</a>.`;
+        }
+
+        function agregarBurbujaAgente(html, esUsuario = false) {
+            const box = document.getElementById('agente-mensajes');
+            const div = document.createElement('div');
+            div.className = esUsuario
+                ? 'bg-blue-600 text-white p-2.5 rounded-xl rounded-tr-none ml-8 text-xs'
+                : 'bg-white dark:bg-slate-800 p-3 rounded-xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-300 leading-relaxed';
+            div.innerHTML = html;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            if (!esUsuario) ultimaRespuestaAgente = div.innerText;
+        }
+
+        window.consultarAgente = (clave) => agregarBurbujaAgente(generarRespuestaAgente(clave), false);
+        window.enviarPreguntaAgente = (e) => {
+            e.preventDefault();
+            const input = document.getElementById('input-agente-pregunta');
+            const val = input.value.trim();
+            if (!val) return;
+            agregarBurbujaAgente(val.replace(/</g, '&lt;'), true);
+            agregarBurbujaAgente(generarRespuestaAgente(val), false);
+            input.value = '';
+        };
+        window.hablarAgente = () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const m = new SpeechSynthesisUtterance(ultimaRespuestaAgente);
+                m.lang = 'es-MX';
+                window.speechSynthesis.speak(m);
+            }
+        };
+
+        // 3. DETECCIÓN 3D / AR
+        (async () => {
+            const badge = document.getElementById('xr-status');
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const arSupported = await navigator.xr?.isSessionSupported?.('immersive-ar').catch(() => false);
+            if (arSupported) {
+                badge.textContent = 'WebXR AR Activo';
+                badge.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700';
+            } else if (isIOS) {
+                badge.textContent = 'AR Quick Look (iOS)';
+                badge.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700';
+            } else {
+                badge.textContent = 'Visor 3D Interactivo';
+            }
+        })();
+
+        // 4. MAPA 3D TEZOYUCA
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: 'https://tiles.openfreemap.org/styles/liberty',
+            center: [CONFIG.TEZOYUCA_LNG, CONFIG.TEZOYUCA_LAT],
+            zoom: 15.5,
+            pitch: 50,
+            bearing: -15,
+            canvasContextAttributes: { antialias: true }
+        });
+        map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+        const comerciosBase = [
+            { titulo: 'Hub 3D Timess & DyA ❤️', cat: 'industrial', lat: 19.5918565, lon: -98.913064, horario: '08:00-20:00', wa: '8441464515', desc: 'Costales, megasacos, consultoría de almacén, costura y Web 3D' },
+            { titulo: 'Punto Tezo-Express', cat: 'servicios', lat: 19.5924, lon: -98.9125, horario: '08:00-22:00', wa: '8441464515', desc: 'Sistema punto de venta y atención comercial' },
+            { titulo: 'Botanas y Comercio Local', cat: 'alimentos', lat: 19.5910, lon: -98.9139, horario: '08:00-21:00', wa: '8441464515', desc: 'Productos y abasto en Tezoyuca' }
+        ];
+
+        let mapMarkers = [];
+        let locatariosNube = [];
+        let catalogoMemoria = [];
+        let categoriaActual = 'todos';
+
+        function estaAbiertoAhora(horarioStr) {
+            try {
+                const [inicio, fin] = horarioStr.split('-');
+                const [h1, m1] = inicio.split(':').map(Number);
+                const [h2, m2] = fin.split(':').map(Number);
+                const ahora = new Date();
+                const mins = ahora.getHours() * 60 + ahora.getMinutes();
+                return mins >= (h1 * 60 + m1) && mins <= (h2 * 60 + m2);
+            } catch { return true; }
+        }
+
+        function distanciaHaversineKm(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function renderizarMarcadoresMapa(lista) {
+            mapMarkers.forEach(m => m.remove());
+            mapMarkers = [];
+            lista.forEach(c => {
+                if (!c.lat || !c.lon) return;
+                const abierto = estaAbiertoAhora(c.horario || '08:00-20:00');
+                const el = document.createElement('div');
+                el.className = `w-4 h-4 rounded-full border-2 border-white shadow-md cursor-pointer ${abierto ? 'bg-emerald-500' : 'bg-slate-400'}`;
+                const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lon}`;
+                const popup = new maplibregl.Popup({ offset: 15 }).setHTML(`
+                    <div style="color:#0f172a;font-size:12px;max-width:200px;">
+                        <strong>${c.titulo}</strong><br>
+                        <span style="color:${abierto ? '#059669' : '#64748b'};font-weight:bold;">${abierto ? 'Abierto ahora' : 'Cerrado'} (${c.horario || 'N/D'})</span><br>
+                        <p style="margin:4px 0;">${c.desc || ''}</p>
+                        <a href="${navUrl}" target="_blank" style="color:#2563eb;font-weight:bold;">Cómo llegar</a>
+                    </div>
+                `);
+                mapMarkers.push(new maplibregl.Marker({ element: el }).setLngLat([parseFloat(c.lon), parseFloat(c.lat)]).setPopup(popup).addTo(map));
+            });
+        }
+
+        map.on('load', () => {
+            const layers = map.getStyle().layers;
+            const labelLayerId = layers.find(l => l.type === 'symbol' && l.layout?.['text-field'])?.id;
+            if (!map.getSource('openfreemap')) {
+                map.addSource('openfreemap', { url: 'https://tiles.openfreemap.org/planet', type: 'vector' });
+            }
+            map.addLayer({
+                id: '3d-buildings',
+                source: 'openfreemap',
+                'source-layer': 'building',
+                type: 'fill-extrusion',
+                minzoom: 15,
+                filter: ['!=', ['get', 'hide_3d'], true],
+                paint: {
+                    'fill-extrusion-color': '#cbd5e1',
+                    'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 6],
+                    'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+                    'fill-extrusion-opacity': 0.85
+                }
+            }, labelLayerId);
+            renderizarMarcadoresMapa([...comerciosBase, ...locatariosNube]);
+        });
+
+        window.obtenerUbicacionUsuario = () => {
+            if (!navigator.geolocation) return alert('Geolocalización no disponible.');
+            navigator.geolocation.getCurrentPosition(pos => {
+                const { latitude, longitude } = pos.coords;
+                map.flyTo({ center: [longitude, latitude], zoom: 16 });
+                new maplibregl.Marker({ color: '#2563eb' }).setLngLat([longitude, latitude]).addTo(map);
+                const todos = [...comerciosBase, ...locatariosNube].filter(c => c.lat && c.lon);
+                if (todos.length) {
+                    const masCercano = todos.map(c => ({ ...c, dist: distanciaHaversineKm(latitude, longitude, c.lat, c.lon) }))
+                        .sort((a, b) => a.dist - b.dist)[0];
+                    document.getElementById('distancia-info').textContent =
+                        `Punto más cercano: ${masCercano.titulo} (${masCercano.dist.toFixed(2)} km)`;
+                }
+            }, () => alert('Activa el permiso GPS para calcular distancia.'));
+        };
+
+        // 5. SHEETS GVIZ + INDEXEDDB
+        window.configurarGoogleSheets = () => {
+            const actual = localStorage.getItem('timess_sheets_id') || '';
+            const id = prompt('ID de Google Sheet pública (hoja "Locatarios"):', actual);
+            if (id !== null) {
+                localStorage.setItem('timess_sheets_id', id.trim());
+                cargarDesdeSheets();
+            }
+        };
+
+        async function cargarDesdeSheets() {
+            const id = localStorage.getItem('timess_sheets_id');
+            if (!id) return;
+            const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&sheet=Locatarios`;
+            try {
+                const resp = await fetch(url);
+                const texto = await resp.text();
+                const filas = texto.split('\n').slice(1);
+                locatariosNube = filas.filter(f => f.trim()).map((fila, idx) => {
+                    const c = fila.split(',').map(v => v.replace(/^"|"$/g, '').trim());
+                    return { id: `nube-${idx}`, titulo: c[0], desc: c[1], wa: c[2], logoUrl: c[3], mediaUrl: c[4], cat: c[5] || 'servicios', lat: c[6], lon: c[7], horario: c[8] || '08:00-20:00', esNube: true };
+                });
+                renderizarMarcadoresMapa([...comerciosBase, ...locatariosNube]);
+                cargarPublicaciones();
+            } catch {}
+        }
+
+        let db;
+        const reqDB = indexedDB.open('Timess3D_FinalDB', 1);
+        reqDB.onupgradeneeded = e => {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains('publicaciones')) db.createObjectStore('publicaciones', { keyPath: 'id', autoIncrement: true });
+        };
+        reqDB.onsuccess = e => {
+            db = e.target.result;
+            if (navigator.storage?.persist) navigator.storage.persist();
+            cargarDesdeSheets();
+            cargarPublicaciones();
+        };
+
+        window.filtrarCategoria = (cat) => {
+            categoriaActual = cat;
+            ['todos', 'industrial', 'alimentos', 'servicios'].forEach(c => {
+                document.getElementById(`btn-cat-${c}`).className = c === cat
+                    ? 'px-3 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white'
+                    : 'px-3 py-1.5 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-800';
+            });
+            cargarPublicaciones();
+        };
+
+        window.abrirModalPublicar = () => document.getElementById('modal-publicar').classList.remove('hidden');
+        window.cerrarModalPublicar = () => document.getElementById('modal-publicar').classList.add('hidden');
+        window.usarMiCoordenadaEnFormulario = () => {
+            navigator.geolocation?.getCurrentPosition(p => {
+                document.getElementById('input-lat').value = p.coords.latitude;
+                document.getElementById('input-lon').value = p.coords.longitude;
+                alert('GPS capturado.');
+            });
+        };
+
+        window.guardarPublicacion = (e) => {
+            e.preventDefault();
+            const media = document.getElementById('input-media').files[0];
+            const item = {
+                titulo: document.getElementById('input-titulo').value.trim(),
+                cat: document.getElementById('input-categoria').value,
+                wa: document.getElementById('input-wa').value.trim(),
+                horario: document.getElementById('input-horario').value.trim(),
+                lat: document.getElementById('input-lat').value,
+                lon: document.getElementById('input-lon').value,
+                desc: document.getElementById('input-desc').value.trim(),
+                logoBlob: document.getElementById('input-logo').files[0] || null,
+                mediaBlob: media,
+                mediaType: media.type,
+                mediaName: media.name
+            };
+            const tx = db.transaction(['publicaciones'], 'readwrite');
+            tx.objectStore('publicaciones').add(item);
+            tx.oncomplete = () => {
+                cerrarModalPublicar();
+                renderizarMarcadoresMapa([...comerciosBase, ...locatariosNube, item]);
+                cargarPublicaciones();
+            };
+        };
+
+        function cargarPublicaciones() {
+            const grid = document.getElementById('grid-contenido');
+            grid.innerHTML = '';
+            const tx = db.transaction(['publicaciones'], 'readonly');
+            tx.objectStore('publicaciones').getAll().onsuccess = e => {
+                const locales = e.target.result.reverse().map(i => ({ ...i, esNube: false }));
+                catalogoMemoria = [...locatariosNube, ...locales].filter(i => categoriaActual === 'todos' || (i.cat || i.categoria) === categoriaActual);
+                if (!catalogoMemoria.length) {
+                    grid.innerHTML = `<div class="col-span-full text-center py-10 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl text-xs text-slate-500">Sin registros en esta categoría. Usa "+ Locatario / Video" o conecta Google Sheets.</div>`;
+                    return;
+                }
+                catalogoMemoria.forEach((item, idx) => {
+                    const mediaUrl = item.esNube ? item.mediaUrl : URL.createObjectURL(item.mediaBlob);
+                    const logoUrl = item.esNube ? item.logoUrl : (item.logoBlob ? URL.createObjectURL(item.logoBlob) : '');
+                    const esVideo = item.esNube ? /\.(mp4|webm|mov)$/i.test(mediaUrl) : item.mediaType.startsWith('video/');
+                    item._mediaUrl = mediaUrl;
+                    item._logoUrl = logoUrl;
+                    item._esVideo = esVideo;
+
+                    const card = document.createElement('div');
+                    card.className = 'tarjeta-3d bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between';
+                    card.innerHTML = `
+                        <div>
+                            <div class="relative bg-black aspect-video flex items-center justify-center">
+                                ${esVideo ? `<video src="${mediaUrl}" class="w-full h-full object-contain" preload="metadata"></video>` : `<img src="${mediaUrl}" class="w-full h-full object-contain">`}
+                                <button onclick="window._abrirVisorIdx(${idx})" class="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-bold">
+                                    <span class="px-3 py-1.5 bg-blue-600/90 rounded-full">${esVideo ? 'Ver Video HD/4K' : 'Ver Completo'}</span>
+                                </button>
+                                <span class="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-extrabold text-white holograma-sello">3D HUB</span>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    ${logoUrl ? `<img src="${logoUrl}" class="w-8 h-8 rounded-full object-cover border border-slate-200">` : `<div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center">${item.titulo.charAt(0).toUpperCase()}</div>`}
+                                    <h4 class="font-bold text-sm"></h4>
+                                </div>
+                                <p class="text-xs text-slate-600 dark:text-slate-400"></p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
+                            ${item.wa ? `<a href="https://wa.me/521${item.wa.replace(/\D/g,'')}" target="_blank" class="font-bold text-emerald-600">WhatsApp</a>` : '<span></span>'}
+                            ${!item.esNube ? `<button onclick="window._eliminar(${item.id})" class="text-red-500 font-bold">Eliminar</button>` : ''}
+                        </div>
+                    `;
+                    card.querySelector('h4').textContent = item.titulo;
+                    card.querySelector('p').textContent = item.desc;
+                    grid.appendChild(card);
+                });
+            };
+        }
+
+        window._abrirVisorIdx = idx => {
+            const item = catalogoMemoria[idx];
+            if (!item) return;
+            document.getElementById('visor-titulo').textContent = item.titulo;
+            const dl = document.getElementById('visor-descargar');
+            dl.href = item._mediaUrl; dl.download = item.mediaName || 'timess-media';
+            const lg = document.getElementById('visor-logo');
+            if (item._logoUrl) { lg.src = item._logoUrl; lg.classList.remove('hidden'); } else { lg.classList.add('hidden'); }
+            document.getElementById('visor-contenedor').innerHTML = item._esVideo
+                ? `<video src="${item._mediaUrl}" controls autoplay playsinline class="max-w-full max-h-full object-contain"></video>`
+                : `<img src="${item._mediaUrl}" class="max-w-full max-h-full object-contain">`;
+            document.getElementById('visor-fullscreen').classList.remove('hidden');
+        };
+        window.cerrarVisor = () => { document.getElementById('visor-contenedor').innerHTML = ''; document.getElementById('visor-fullscreen').classList.add('hidden'); };
+        window._eliminar = id => {
+            const tx = db.transaction(['publicaciones'], 'readwrite');
+            tx.objectStore('publicaciones').delete(id);
+            tx.oncomplete = () => cargarPublicaciones();
+        };
+
+        // 6. PAGOS
+        let montoPagoActualMXN = 50;
+        let conceptoActual = 'Servicio 3D Timess';
+
+        window.abrirModalPago = (concepto, montoMXN) => {
+            conceptoActual = concepto;
+            montoPagoActualMXN = montoMXN;
+            document.getElementById('pago-concepto').textContent = concepto;
+            document.getElementById('pago-monto').textContent = `$${montoMXN.toFixed(2)}`;
+            document.getElementById('modal-pago').classList.remove('hidden');
+        };
+        window.cerrarModalPago = () => document.getElementById('modal-pago').classList.add('hidden');
+
+        window.copiarDatosSPEI = () => {
+            navigator.clipboard?.writeText(CONFIG.CLABE_DIMO_LOCAL);
+            const msg = encodeURIComponent(`Hola Alejandro, envío comprobante de $${montoPagoActualMXN} MXN por: ${conceptoActual}.`);
+            window.open(`https://wa.me/${CONFIG.WA_ADMIN}?text=${msg}`, '_blank');
+        };
+
+        function construirURI_EIP681() {
+            const usdcMonto = (montoPagoActualMXN / CONFIG.MXN_POR_USD).toFixed(2);
+            const unidades6Dec = BigInt(Math.round(parseFloat(usdcMonto) * 1e6)).toString();
+            return `ethereum:${CONFIG.POLYGON_NATIVE_USDC}@137/transfer?address=${CONFIG.MERCHANT_EVM_WALLET}&uint256=${unidades6Dec}`;
+        }
+
+        window.copiarURI_EIP681 = () => {
+            const uri = construirURI_EIP681();
+            navigator.clipboard?.writeText(uri);
+            document.getElementById('web3-tx-status').textContent = `URI EIP-681: ${uri}`;
+        };
+
+        window.pagarConPolygonUSDC = async () => {
+            const st = document.getElementById('web3-tx-status');
+            if (!window.ethereum) return st.textContent = 'Abre desde billetera EVM o copia la URI EIP-681.';
+            try {
+                await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: CONFIG.POLYGON_CHAIN_ID }] });
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+                const abi = ['function transfer(address to, uint256 value) returns (bool)'];
+                const usdc = new ethers.Contract(CONFIG.POLYGON_NATIVE_USDC, abi, signer);
+                const usdcMonto = (montoPagoActualMXN / CONFIG.MXN_POR_USD).toFixed(2);
+                const tx = await usdc.transfer(CONFIG.MERCHANT_EVM_WALLET, ethers.parseUnits(usdcMonto, 6));
+                st.textContent = `Enviado: ${tx.hash}`;
+                await tx.wait();
+                st.textContent = `Confirmado: ${tx.hash}`;
+            } catch { st.textContent = 'Transacción cancelada o saldo insuficiente.'; }
+        };
+
+        // 7. MANIFEST + SERVICE WORKER EN MEMORIA
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = URL.createObjectURL(new Blob([JSON.stringify({
+            name: '3D Timess Marketing & Tezo-Express',
+            short_name: '3D Timess',
+            start_url: '.',
+            display: 'standalone',
+            background_color: '#090d16',
+            theme_color: '#0f172a'
+        })], { type: 'application/json' }));
+        document.head.appendChild(manifestLink);
+
+        if ('serviceWorker' in navigator) {
+            const swBlob = new Blob([`
+                self.addEventListener('install', e => self.skipWaiting());
+                self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+            `], { type: 'application/javascript' });
+            navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+        }
+    </script>
+</body>
+</html>
